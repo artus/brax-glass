@@ -3,7 +3,7 @@
 */
 const glassId = 'brax-glass-blonde';
 const foamThickness = 0.2;
-let fillPercentage = 0.3;
+let fillPercentage = 0.8;
 
 /*
   Elements
