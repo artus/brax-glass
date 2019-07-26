@@ -9,7 +9,6 @@
   height: 100%;
 
   left: 0;
-  bottom: 0;
 
   position: absolute;
 
@@ -17,14 +16,29 @@
   overflow: hidden;
 }
 
-.brax-glass-border {
+.brax-glass-foreground {
+  top: 0;
   z-index: 3;
+  background-position: top left;
+  background-image: url('./../img/glass-foreground.png');
+}
+
+.brax-glass-border {
+  top: 0;
+  z-index: 4;
   background-image: url('./../img/glass_border.png');
   background-size: 100%;
 }
 
+.brax-glass-foam {
+  top: 0;
+  z-index: 2;
+  background-image: url('./../img/glass-foam.png');
+  background-position: top left;
+}
+
 .brax-glass-content {
-  background-size: auto;
+  bottom: 0;
   z-index: 2;
   background-image: url('./../img/blonde-background.png');
 }

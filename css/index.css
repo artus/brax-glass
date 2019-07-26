@@ -19,3 +19,7 @@ body {
   background-color: beige;
 }
 
+#glass-slider {
+  position: absolute;
+}
+
