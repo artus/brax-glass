@@ -1,91 +1,83 @@
-/*
-  Constants
-*/
-const glassId = 'brax-glass-blonde';
-const foamThickness = 0.2;
-let fillPercentage = 0.8;
+class Glass {
 
-/*
-  Elements
-*/
-const glassContainer = document.getElementById(glassId);
-const glassContent = glassContainer.getElementsByClassName(`brax-glass-content`)[0];
-const glassForeground = glassContainer.getElementsByClassName(`brax-glass-foreground`)[0];
-const glassFoam = glassContainer.getElementsByClassName(`brax-glass-foam`)[0];
+  constructor(glassId, fillPercentage, foamThickness) {
+    this.glassId = glassId;
+    this.fillPercentage = fillPercentage;
+    this.foamThickness = foamThickness;
 
-/*
-  Event handlers
-*/
-window.addEventListener('resize', resizeGlass);
+    this.glassContainer = document.getElementById(glassId);
+    this.glassContent = this.glassContainer.getElementsByClassName(`brax-glass-content`)[0];
+    this.glassForeground = this.glassContainer.getElementsByClassName(`brax-glass-foreground`)[0];
+    this.glassFoam = this.glassContainer.getElementsByClassName(`brax-glass-foam`)[0];
 
-/*
-  Functions
-*/
-function getWidth() {
-  return glassContainer.clientHeight;
+    window.addEventListener('resize', function() { this.render(); }.bind(this));
+
+    this.render();
+  }
+
+  getWidth() {
+    return this.glassContainer.clientHeight;
+  }
+
+  getFoamThickness() {
+    return this.foamThickness * this.fillPercentage;
+  }
+
+  getHeightForForeground() {
+    return Math.ceil((1 - this.fillPercentage) * this.getWidth());
+  }
+
+  getHeightForContent() {
+    return Math.ceil(this.getWidth() * this.fillPercentage);
+  }
+
+  getBottomForFoam() {
+    return Math.ceil(this.getHeightForForeground());
+  }
+
+  getHeightForFoam() {
+    return Math.ceil(this.getWidth() * this.getFoamThickness());
+  }
+
+  getTopForContent() {
+    return Math.ceil(this.getWidth() - this.getHeightForContent());
+  }
+
+  getTopForFoam() {
+    return Math.ceil(this.getTopForContent() - this.getHeightForFoam() + 1);
+  }
+
+  getBackgroundPositionForFoam() {
+    return Math.ceil(this.getTopForFoam() * -1);
+  }
+
+  render() {
+    console.log("resizing");
+    const width = this.getWidth();
+    this.glassContainer.style.width = `${width}px`;
+
+    this.glassForeground.style.height = `${this.getHeightForForeground()}px`;
+    this.glassContent.style.height = `${this.getHeightForContent()}px`;
+
+    this.glassFoam.style.top = `${this.getTopForFoam()}px`;
+    this.glassFoam.style.height = `${this.getHeightForFoam()}px`;
+
+    this.glassFoam.style.backgroundPosition = `0 ${this.getBackgroundPositionForFoam()}px`
+
+    this.glassForeground.style.backgroundSize = `${width}px ${width}px`;
+    this.glassContent.style.backgroundSize = `${width}px ${width}px`;
+    this.glassFoam.style.backgroundSize = `${width}px ${width}px`;
+  }
+
+  setFillPercentage(newPercentage) {
+    this.fillPercentage = newPercentage;
+    this.render();
+  }
 }
 
-function getFoamThickness() {
-  return foamThickness * fillPercentage;
-}
-
-function getHeightForForeground() {
-  return (1 - fillPercentage) * getWidth();
-}
-
-function getHeightForContent() {
-  return getWidth() * fillPercentage;
-}
-
-function getBottomForFoam() {
-  return getHeightForForeground();
-}
-
-function getHeightForFoam() {
-  return this.getWidth() * this.getFoamThickness();
-}
-
-function getTopForContent() {
-  return this.getWidth() - this.getHeightForContent();
-}
-
-function getTopForFoam() {
-  return this.getTopForContent() - this.getHeightForFoam();
-}
-
-function getBackgroundPositionForFoam() {
-  return this.getTopForFoam() * -1;
-}
-
-function resizeGlass() {
-  console.log("resizing");
-  const width = getWidth();
-  glassContainer.style.width = `${width}px`;
-
-  glassForeground.style.height = `${getHeightForForeground()}px`;
-  glassContent.style.height = `${getHeightForContent()}px`;
-
-  glassFoam.style.top = `${getTopForFoam()}px`;
-  glassFoam.style.height = `${getHeightForFoam()}px`;
-
-  glassFoam.style.backgroundPosition = `0 ${getBackgroundPositionForFoam()}px`
-
-  glassForeground.style.backgroundSize = `${width}px ${width}px`;
-  glassContent.style.backgroundSize = `${width}px ${width}px`;
-  glassFoam.style.backgroundSize = `${width}px ${width}px`;
-}
-
-function setFillPercentage(newPercentage) {
-  fillPercentage = newPercentage;
-  resizeGlass();
-}
-
-/*
-  Start
-*/
-resizeGlass();
+const glass = new Glass('brax-glass-blonde', 0.8, 0.3);
 
 const glassSlider = document.getElementById("glass-slider");
-glassSlider.oninput = function() {
-  setFillPercentage(this.value);
+glassSlider.oninput = function () {
+  glass.setFillPercentage(this.value);
 }
