@@ -15,6 +15,7 @@
 
   background-position: bottom left;
   overflow: hidden;
+  background-repeat: no-repeat;
 }
 
 .brax-glass-foreground {
