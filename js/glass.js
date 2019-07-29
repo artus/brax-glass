@@ -125,7 +125,6 @@ class TimedGlass {
   }
 
   getFinalFillPercentage(fillPercentage) {
-    console.log(fillPercentage, this.min, this.max);
     if (fillPercentage > this.max) return this.max;
     if (fillPercentage < this.min) return this.min;
     return fillPercentage;
