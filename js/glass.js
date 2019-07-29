@@ -95,17 +95,23 @@ class TimedGlass {
 
   constructor(settings) {
 
-    let { glassId,
-      foamThickness,
+    let {
+      max,
+      min,
       start,
-      end} = settings;
+      end } = settings;
 
+    this.max = max || 1;
+    this.min = min || 0;
     this.start = new Date(start).getTime();
     this.end = new Date(end).getTime();
 
     if (this.start >= this.end) throw new Error("Starting time can not be equal or after ending time.");
+    if (this.max <= this.min) throw new Error("Max can not be less than min.");
 
     this.glass = new Glass(settings);
+
+    this.calculateFillPercentage(this.start, this.end);
     setInterval(() => {
       this.calculateFillPercentage(this.start, this.end);
     }, 1000);
@@ -114,8 +120,15 @@ class TimedGlass {
   calculateFillPercentage(start, end) {
     const currentTime = new Date().getTime() - start;
     const totalTime = end - start;
-    const fillPercentage = currentTime >= totalTime ? 0 : 1 - (currentTime / totalTime);
-    this.glass.setFillPercentage(fillPercentage);
+    let calculatedPercentage = currentTime >= totalTime ? 0 : 1 - (currentTime / totalTime);
+    this.glass.setFillPercentage(this.getFinalFillPercentage(calculatedPercentage));
+  }
+
+  getFinalFillPercentage(fillPercentage) {
+    console.log(fillPercentage, this.min, this.max);
+    if (fillPercentage > this.max) return this.max;
+    if (fillPercentage < this.min) return this.min;
+    return fillPercentage;
   }
 
 }
