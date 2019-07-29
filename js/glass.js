@@ -1,18 +1,35 @@
 class Glass {
 
-  constructor(glassId, fillPercentage, foamThickness) {
+  constructor(settings) {
+
+    let {
+      glassId,
+      fillPercentage,
+      foamThickness
+    } = settings;
+
     this.glassId = glassId;
     this.fillPercentage = fillPercentage;
     this.foamThickness = foamThickness;
 
     this.glassContainer = document.getElementById(glassId);
-    this.glassContent = this.glassContainer.getElementsByClassName(`brax-glass-content`)[0];
-    this.glassForeground = this.glassContainer.getElementsByClassName(`brax-glass-foreground`)[0];
-    this.glassFoam = this.glassContainer.getElementsByClassName(`brax-glass-foam`)[0];
+    this.glassContainer.classList.add('brax-glass-container');
 
-    window.addEventListener('resize', function() { this.render(); }.bind(this));
+    this.createChild('glassForeground', 'brax-glass-foreground');
+    this.createChild('glassBorder', 'brax-glass-border');
+    this.createChild('glassFoam', 'brax-glass-foam');
+    this.createChild('glassContent', 'brax-glass-content');
+
+    window.addEventListener('resize', function () { this.render(); }.bind(this));
 
     this.render();
+  }
+
+  createChild(id, className) {
+    const newChild = document.createElement('div');
+    newChild.classList.add(className);
+    this.glassContainer.appendChild(newChild);
+    this[id] = newChild;
   }
 
   getWidth() {
@@ -52,7 +69,6 @@ class Glass {
   }
 
   render() {
-    console.log("resizing");
     const width = this.getWidth();
     this.glassContainer.style.width = `${width}px`;
 
@@ -75,9 +91,31 @@ class Glass {
   }
 }
 
-const glass = new Glass('brax-glass-blonde', 0.8, 0.3);
+class TimedGlass {
 
-const glassSlider = document.getElementById("glass-slider");
-glassSlider.oninput = function () {
-  glass.setFillPercentage(this.value);
+  constructor(settings) {
+
+    let { glassId,
+      foamThickness,
+      start,
+      end} = settings;
+
+    this.start = new Date(start).getTime();
+    this.end = new Date(end).getTime();
+
+    if (this.start >= this.end) throw new Error("Starting time can not be equal or after ending time.");
+
+    this.glass = new Glass(settings);
+    setInterval(() => {
+      this.calculateFillPercentage(this.start, this.end);
+    }, 1000);
+  }
+
+  calculateFillPercentage(start, end) {
+    const currentTime = new Date().getTime() - start;
+    const totalTime = end - start;
+    const fillPercentage = currentTime >= totalTime ? 0 : 1 - (currentTime / totalTime);
+    this.glass.setFillPercentage(fillPercentage);
+  }
+
 }
