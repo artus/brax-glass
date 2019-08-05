@@ -10,7 +10,7 @@ class Glass {
 
     this.glassId = glassId;
     this.fillPercentage = fillPercentage;
-    this.foamThickness = foamThickness;
+    this.foamThickness = foamThickness || 0.3;
 
     this.glassContainer = document.getElementById(glassId);
     this.glassContainer.classList.add('brax-glass-container');
