@@ -9,7 +9,7 @@ class Glass {
     } = settings;
 
     this.glassId = glassId;
-    this.fillPercentage = fillPercentage;
+    this.fillPercentage = fillPercentage || 1;
     this.foamThickness = foamThickness || 0.3;
 
     this.glassContainer = document.getElementById(glassId);
