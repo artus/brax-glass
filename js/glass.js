@@ -32,8 +32,8 @@ class Glass {
     this[id] = newChild;
   }
 
-  getWidth() {
-    return this.glassContainer.clientHeight;
+  getHeight() {
+    return this.glassContainer.clientWidth;
   }
 
   getFoamThickness() {
@@ -41,11 +41,11 @@ class Glass {
   }
 
   getHeightForForeground() {
-    return Math.ceil((1 - this.fillPercentage) * this.getWidth());
+    return Math.ceil((1 - this.fillPercentage) * this.getHeight());
   }
 
   getHeightForContent() {
-    return Math.ceil(this.getWidth() * this.fillPercentage);
+    return Math.ceil(this.getHeight() * this.fillPercentage);
   }
 
   getBottomForFoam() {
@@ -53,11 +53,11 @@ class Glass {
   }
 
   getHeightForFoam() {
-    return Math.ceil(this.getWidth() * this.getFoamThickness());
+    return Math.ceil(this.getHeight() * this.getFoamThickness());
   }
 
   getTopForContent() {
-    return Math.ceil(this.getWidth() - this.getHeightForContent());
+    return Math.ceil(this.getHeight() - this.getHeightForContent());
   }
 
   getTopForFoam() {
@@ -69,8 +69,8 @@ class Glass {
   }
 
   render() {
-    const width = this.getWidth();
-    this.glassContainer.style.width = `${width}px`;
+    const width = this.getHeight();
+    this.glassContainer.style.height = `${width}px`;
 
     this.glassForeground.style.height = `${this.getHeightForForeground()}px`;
     this.glassContent.style.height = `${this.getHeightForContent()}px`;
