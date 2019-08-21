@@ -1,3 +1,5 @@
+const RENDER_EVENT = 'render_event';
+
 class Glass {
 
   constructor(settings) {
@@ -21,6 +23,8 @@ class Glass {
     this.createChild('glassContent', 'brax-glass-content');
 
     window.addEventListener('resize', function () { this.render(); }.bind(this));
+
+    this.renderEvent = new CustomEvent(RENDER_EVENT, { detail: () => this.fillPercentage });
 
     this.render();
   }
@@ -69,8 +73,8 @@ class Glass {
   }
 
   render() {
-    const width = this.getHeight();
-    this.glassContainer.style.height = `${width}px`;
+    const height = this.getHeight();
+    this.glassContainer.style.height = `${height}px`;
 
     this.glassForeground.style.height = `${this.getHeightForForeground()}px`;
     this.glassContent.style.height = `${this.getHeightForContent()}px`;
@@ -80,9 +84,11 @@ class Glass {
 
     this.glassFoam.style.backgroundPosition = `0 ${this.getBackgroundPositionForFoam()}px`
 
-    this.glassForeground.style.backgroundSize = `${width}px ${width}px`;
-    this.glassContent.style.backgroundSize = `${width}px ${width}px`;
-    this.glassFoam.style.backgroundSize = `${width}px ${width}px`;
+    this.glassForeground.style.backgroundSize = `${height}px ${height}px`;
+    this.glassContent.style.backgroundSize = `${height}px ${height}px`;
+    this.glassFoam.style.backgroundSize = `${height}px ${height}px`;
+
+    this.glassContainer.dispatchEvent(this.renderEvent);
   }
 
   setFillPercentage(newPercentage) {
